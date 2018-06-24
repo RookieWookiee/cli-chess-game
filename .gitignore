@@ -1,2 +1,6 @@
 *.o
 *.out
+tags
+deps/
+obj/
+chess
