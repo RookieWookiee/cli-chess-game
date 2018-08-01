@@ -11,7 +11,7 @@ piece_t *bishop;
 board_t *board;
 
 /* fakes */
-bool on_same_diagonal(pos_t a, pos_t b) {}
+bool on_same_diagonal(pos_t a, pos_t b) { return false; }
 void standard_validation(piece_t *self, pos_t target, board_t *board) { }
 void add_moves_while_empty(board_t *board, piece_t *self, direction_t direction, llist_t **moves)
 {

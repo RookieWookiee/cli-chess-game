@@ -35,7 +35,11 @@ $(DEPDIR):
 	@-for i in `find src/ -type d`; do dir=`echo $$i | sed -e 's/src/$(DEPDIR)/'`; test ! -d $$dir && mkdir -p $$dir; done
 
 clean:
-	rm -r obj/
-	rm chess
+	-rm -r obj/
+	-rm chess
+	-find $(TESTDIR) -type f -name '*.so' -exec rm {} \;
 
-.PHONY: clean
+check:
+	-cd $(TESTDIR) && $(MAKE)
+
+.PHONY: clean check

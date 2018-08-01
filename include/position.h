@@ -11,6 +11,6 @@ typedef struct pos {
 
 bool position_equals(const void *a, const void *b);
 void position_print(const void *a);
-
+bool is_in_bounds(pos_t pos);
 
 #endif /* POSITION_H */

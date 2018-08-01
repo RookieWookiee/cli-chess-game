@@ -10,8 +10,8 @@ BeforeEach(Board) {}
 AfterEach(Board) {}
 
 /* fakes to keep the linker happy */
-piece_t **make_piece(uint8_t rank, uint8_t file, uint8_t type_id) {}
-char *get_sym(piece_t **piece, bool use_unicode) {}
+piece_t **make_piece(uint8_t rank, uint8_t file, uint8_t type_id) { return NULL; }
+char *get_sym(piece_t **piece, bool use_unicode) { return NULL; }
 
 Ensure(Board, empty_board_return_an_empty_board)
 {
@@ -76,4 +76,9 @@ Ensure(Board, is_empty_square_correctness)
     assert_that(is_square_empty(board, RANK_1, FILE_A), is_true);
     assert_that(is_square_empty(board, RANK_1, FILE_B), is_true);
     assert_that(is_square_empty(board, RANK_1, FILE_C), is_false);
+}
+
+Ensure(Board, new_test)
+{
+    assert_true(true);
 }

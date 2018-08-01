@@ -33,6 +33,7 @@ void move_piece(board_t *board, piece_t **piece, pos_t target_pos);
 bool get_color(piece_t *piece);
 bool is_enemy(piece_t *p1, piece_t *p2);
 bool on_same_diagonal(pos_t p1, pos_t p2);
+llist_t *get_piece_attackers(board_t *board, pos_t from_pos, bool piece_color);
 const struct piece_vtable_ *get_vtable(uint8_t type_id);
 
 extern const struct piece_vtable_ PAWN[], BISHOP[], KNIGHT[], ROOK[], KING[], QUEEN[];

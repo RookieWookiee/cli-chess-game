@@ -10,12 +10,15 @@ Describe(Piece);
 BeforeEach(Piece) {}
 AfterEach(Piece) {}
 
-/* gcc -shared -o piece.so -iquote ../../ -fPIC piece_test.c ../../src/piece.c -lcgreen */
-/* cgreen-runner piece.so */
-
 /* to keep the linker happy */
-static int fake_validate(piece_t *self, pos_t target, board_t *board) {}
-static llist_t *fake_gen_moves(piece_t *self, board_t *board) {}
+static int fake_validate(piece_t *self, pos_t target, board_t *board) { return 0; }
+static llist_t *fake_gen_moves(piece_t *self, board_t *board) { return NULL; }
+void add_moves_while_empty(board_t * b, piece_t * p, direction_t d, llist_t **l) {}
+void destroy(llist_t **h) {}
+void push(llist_t **h, void *n, size_t d) {}
+void *popleft(llist_t **h) { return NULL; }
+piece_t **get_square(board_t *s, uint8_t r, uint8_t f) { return NULL; }
+bool is_square_empty(board_t *s, uint8_t r, uint8_t f) { return false; }
 
 const struct piece_vtable_ PAWN[] = { { fake_validate, fake_gen_moves } };
 const struct piece_vtable_ ROOK[] = { { fake_validate, fake_gen_moves } };
@@ -56,7 +59,7 @@ Ensure(Piece, get_color_correctness)
 
     piece_t base_piece;
 
-    for(int i = 0; i < sizeof(ids); i++) {
+    for(size_t i = 0; i < sizeof(ids)/sizeof(ids[0]); i++) {
         base_piece.type_id = ids[i];
         bool expected_color = i % 2 == 0 ? WHITE : BLACK;
 
@@ -70,7 +73,7 @@ Ensure(Piece, is_enemy_correctness)
 
     piece_t p1, p2;
 
-    for(int i = 0; i < sizeof(ids[0]); i++) {
+    for(size_t i = 0; i < sizeof(ids)/sizeof(ids[0]); i++) {
         p1.type_id = ids[i][0];
         p2.type_id = ids[i][1];
         bool expected = ids[i][2];
@@ -95,7 +98,7 @@ Ensure(Piece, get_sym_returns_correct_representations_non_unicode)
     *test_piece = (piece_t){ };
     bool use_unicode = false;
 
-    for(int i = 0; i < sizeof(ids); i++) {
+    for(size_t i = 0; i < sizeof(ids)/sizeof(ids[0]); i++) {
         test_piece->type_id = ids[i];
         char *expected_sym = expected[i];
 
@@ -121,7 +124,7 @@ Ensure(Piece, get_sym_returns_correct_representation_unicode)
     *test_piece = (piece_t){ };
     bool use_unicode = true;
 
-    for(int i = 0; i < sizeof(ids); i++) {
+    for(size_t i = 0; i < sizeof(ids)/sizeof(ids[0]); i++) {
         test_piece->type_id = ids[i];
         char *expected_sym = expected[i];
 

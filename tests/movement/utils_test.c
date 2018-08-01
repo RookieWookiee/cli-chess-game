@@ -9,8 +9,8 @@
 #include "include/movement_utils.h"
 
 /* fakes */
-bool position_equals(const void *a, const void *b) {}
-bool contains(llist_t *head_ref, void * const obj, bool (*equals)(const void *, const void *)) {}
+bool position_equals(const void *a, const void *b) { return false; }
+bool contains(llist_t *head_ref, void * const obj, bool (*equals)(const void *, const void *)) { return false; }
 void destroy(llist_t **head_ref) {}
 piece_t **get_square(board_t *self, uint8_t rank, uint8_t file) { return calloc(1, sizeof(piece_t*)); }
 
@@ -42,7 +42,7 @@ Ensure(Utils, add_moves_respects_bound_checks_in_all_directions)
     never_expect(push);
     always_expect(is_in_bounds, will_return(false));
 
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         add_moves_while_empty(board, piece, dirs[i], NULL);
     }
 }
@@ -52,7 +52,7 @@ Ensure(Utils, add_moves_respects_empty_squares_checks)
     direction_t dirs[] = { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST };
 
     /* affirmative expectations */
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_in_bounds, will_return(false));
         expect(is_square_empty, will_return(true));
@@ -63,7 +63,7 @@ Ensure(Utils, add_moves_respects_empty_squares_checks)
 
     /* negative expectations */
     never_expect(push);
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
 
@@ -76,7 +76,7 @@ Ensure(Utils, add_moves_respect_enemy_checks)
     direction_t dirs[] = { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST };
 
     /* affirmative expectations */
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
         expect(is_enemy, will_return(true));
@@ -87,7 +87,7 @@ Ensure(Utils, add_moves_respect_enemy_checks)
 
     /* negative expectations */
     never_expect(push);
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
         expect(is_enemy, will_return(false));
@@ -107,7 +107,7 @@ Ensure(Utils, add_moves_pushes_correct_positions)
     };
     piece->rank = RANK_4; piece->file = FILE_D;
 
-    for(int i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+    for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(true));
 
