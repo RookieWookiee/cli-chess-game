@@ -29,7 +29,7 @@ int main(void)
     printf("\n");
     
     pos_t target = { RANK_6, FILE_E };
-    printf(is_valid_move(bishop, target, board) ? "true" : "false");
+    printf(is_legal_move(bishop, target, board) ? "true" : "false");
 
     printf("\nAll is k\n");
 }

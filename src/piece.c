@@ -39,17 +39,22 @@ piece_t **make_piece(uint8_t rank, uint8_t file, uint8_t type_id)
     (*piece)->rank = rank;
     (*piece)->file = file;
     (*piece)->type_id = type_id;
-
-    switch(type_id) {
-        case PAWN_W_ID:     case PAWN_B_ID:     (*piece)->vtable = PAWN;    break;
-        case ROOK_W_ID:     case ROOK_B_ID:     (*piece)->vtable = ROOK;    break;
-        case BISHOP_W_ID:   case BISHOP_B_ID:   (*piece)->vtable = BISHOP;  break;
-        case QUEEN_W_ID:    case QUEEN_B_ID:    (*piece)->vtable = QUEEN;   break;
-        case KNIGHT_W_ID:   case KNIGHT_B_ID:   (*piece)->vtable = KNIGHT;  break;
-        case KING_W_ID:     case KING_B_ID:     (*piece)->vtable = KNIGHT;  break;
-    }
+    (*piece)->vtable = get_vtable(type_id);
 
     return piece;
+}
+
+const struct piece_vtable_ *get_vtable(uint8_t type_id)
+{
+    switch(type_id) {
+        case PAWN_W_ID:     case PAWN_B_ID:     return PAWN;    break;
+        case ROOK_W_ID:     case ROOK_B_ID:     return ROOK;    break;
+        case BISHOP_W_ID:   case BISHOP_B_ID:   return BISHOP;  break;
+        case QUEEN_W_ID:    case QUEEN_B_ID:    return QUEEN;   break;
+        case KNIGHT_W_ID:   case KNIGHT_B_ID:   return KNIGHT;  break;
+        case KING_W_ID:     case KING_B_ID:     return KING;  break;
+        default: return NULL; break;
+    }
 }
 
 bool get_color(piece_t *piece)
@@ -85,4 +90,15 @@ void move_piece(board_t *board, piece_t **piece, pos_t target_pos)
     update_board(board, piece, target_pos);
     (*piece)->rank = target_pos.rank;
     (*piece)->file = target_pos.file;
+}
+
+bool on_same_diagonal(pos_t p1, pos_t p2)
+{
+    int target_diagonal = (int)p1.rank - p1.file;
+    int piece_diagonal = (int)p2.rank - p2.file;
+
+    int target_anti_diagonal = (int)p1.rank + p1.file;
+    int piece_anti_diagonal = (int)p2.rank + p2.file;
+
+    return target_diagonal == piece_diagonal || target_anti_diagonal == piece_anti_diagonal;
 }

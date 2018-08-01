@@ -6,7 +6,6 @@
 
 bool is_in_bounds(pos_t pos)
 {
-    /* There's no checking for lower bounds because the underlying type is unsigned. */
     if(pos.rank > RANK_8 || pos.file > FILE_H) return false;
 
     return true;
@@ -19,6 +18,7 @@ bool position_equals(const void *a, const void *b)
     return _a->rank == _b->rank && _a->file == _b->file;
 }
 
+/* for testing purposes */
 void position_print(const void *a)
 {
     const pos_t *_a = a;

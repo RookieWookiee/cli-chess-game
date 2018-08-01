@@ -2,14 +2,15 @@ SHELL = /bin/bash
 CC = cc
 TARGET = chess
 SRCDIR = src
+TESTDIR = tests
 CFLAGS  = -Wall -Wextra -ggdb3 -std=gnu99 -iquote . -Wno-unused-parameter
 SRCS = $(shell find src/ -type f -name '*.c' | sort)
 DEPDIR = deps
 
 DEPS = $(shell echo $(SRCS) | sed -e 's/$(SRCDIR)/$(DEPDIR)/g' -e 's/\.c/\.d/g')
 
-OBJDIR := obj
-OBJS := $(shell find src/ -type f -name '*.c' | sort | sed -e 's/src/$(OBJDIR)/' -e 's/.c$$/.o/')
+OBJDIR = obj
+OBJS = $(shell find src/ -type f -name '*.c' | sort | sed -e 's/src/$(OBJDIR)/' -e 's/.c$$/.o/')
 
 all: $(TARGET)
 

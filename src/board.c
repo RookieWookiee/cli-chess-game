@@ -9,6 +9,15 @@ void set_square(board_t *self, pos_t pos, piece_t **piece);
 static void print_header();
 static void print_footer();
 
+board_t *make_empty_board()
+{
+    board_t *board = malloc(sizeof(*board));
+    *board = (board_t) { NULL };
+    board->ply = 1;
+
+    return board;
+}
+
 board_t *make_board()
 {
     board_t *board = malloc(sizeof(*board));

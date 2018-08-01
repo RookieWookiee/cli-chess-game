@@ -7,8 +7,12 @@
 #define NUM_ROWS 8
 #define NUM_COLS 8
 
+#define MAX_DIRECTION 7
+
 enum { FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H };
 enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8 };
+typedef enum { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST = MAX_DIRECTION } direction_t;
+enum { DOWN = 1, UP = -1, LEFT = -1, RIGHT = 1, NONE = 0 };
 
 /* forward declaration */
 typedef struct piece piece_t;
@@ -25,5 +29,7 @@ piece_t **get_square(board_t *self, uint8_t rank, uint8_t file);
 void print_board(board_t *self);
 void update_board(board_t *self, piece_t **piece, pos_t target_pos);
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file);
+bool is_in_bounds(pos_t pos);
+board_t *make_empty_board();
 
 #endif /* BOARD_H */

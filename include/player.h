@@ -10,10 +10,9 @@ typedef struct board board_t;
 typedef struct player {
     /* 13 is the count of the type id enums*/
     uint8_t num_pieces[13]; 
-    /* 10 is the maximum possible pieces of the same kind */
     piece_t **pieces[13][10];
     /* player color */
-    bool p_color;
+    bool color;
 } player_t;
 
 player_t *make_player(bool color, board_t *board);

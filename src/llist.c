@@ -10,6 +10,7 @@ void push(llist_t **head_ref, void *new_data, size_t data_size)
 
     new_node->data = malloc(data_size);
     new_node->next = (*head_ref);
+    new_node->node_count = (*head_ref) == NULL ?  1 : (*head_ref)->node_count + 1;
 
     for(size_t i = 0; i < data_size; i++) {
         *(uint8_t *)(new_node->data + i) = *(uint8_t *)(new_data + i);
@@ -51,4 +52,17 @@ void destroy(llist_t **head_ref)
 bool is_empty(llist_t *head_ref)
 {
     return head_ref == NULL;
+}
+
+int count(llist_t *head_ref)
+{
+    return head_ref->node_count;
+}
+
+void *popleft(llist_t **head_ref)
+{
+    void *data = (*head_ref)->data;
+    (*head_ref) = (*head_ref)->next;
+
+    return data;
 }

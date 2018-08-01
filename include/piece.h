@@ -32,10 +32,12 @@ char *get_sym(piece_t **piece, bool use_unicode);
 void move_piece(board_t *board, piece_t **piece, pos_t target_pos);
 bool get_color(piece_t *piece);
 bool is_enemy(piece_t *p1, piece_t *p2);
+bool on_same_diagonal(pos_t p1, pos_t p2);
+const struct piece_vtable_ *get_vtable(uint8_t type_id);
 
 extern const struct piece_vtable_ PAWN[], BISHOP[], KNIGHT[], ROOK[], KING[], QUEEN[];
 
-static inline int is_valid_move(piece_t *piece, pos_t target, board_t *board)
+static inline int is_legal_move(piece_t *piece, pos_t target, board_t *board)
 {
     return piece->vtable->validate_move(piece, target, board);
 }
@@ -64,8 +66,8 @@ enum { BLACK, WHITE };
 #define ROOK_B_ASCII     "r"
 #define BISHOP_W_ASCII   "B"
 #define BISHOP_B_ASCII   "b"
-#define KNIGHT_W_ASCII   "K"
-#define KNIGHT_B_ASCII   "k"
+#define KNIGHT_W_ASCII   "N"
+#define KNIGHT_B_ASCII   "n"
 #define QUEEN_W_ASCII    "Q"
 #define QUEEN_B_ASCII    "q"
 #define KING_W_ASCII     "K"
