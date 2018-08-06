@@ -10,12 +10,10 @@
 
 /* fakes */
 bool position_equals(const void *a, const void *b) { return false; }
-bool contains(llist_t *head_ref, void * const obj, bool (*equals)(const void *, const void *)) { return false; }
-void destroy(llist_t **head_ref) {}
+piece_t ** make_piece(uint8_t rank, uint8_t file, uint8_t type_id) { return NULL; }
 piece_t **get_square(board_t *self, uint8_t rank, uint8_t file) { return calloc(1, sizeof(piece_t*)); }
 
 /* mocks */
-void push(llist_t **head_ref, void *new_data, size_t data_size);
 bool is_in_bounds(pos_t pos);
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file);
 bool is_enemy(piece_t *p1, piece_t *p2);
@@ -36,63 +34,72 @@ Ensure(Utils, add_moves_respects_bound_checks_in_all_directions)
 {
 
     direction_t dirs[] = { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST };
+    llist_t *moves = NULL;
 
     never_expect(is_square_empty);
     never_expect(is_enemy);
-    never_expect(push);
     always_expect(is_in_bounds, will_return(false));
 
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
-        add_moves_while_empty(board, piece, dirs[i], NULL);
+        add_moves_while_empty(board, piece, dirs[i], &moves);
     }
+
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(Utils, add_moves_respects_empty_squares_checks)
 {
     direction_t dirs[] = { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST };
+    llist_t *moves = NULL;
 
     /* affirmative expectations */
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_in_bounds, will_return(false));
         expect(is_square_empty, will_return(true));
-        expect(push);
 
-        add_moves_while_empty(board, piece, dirs[i], NULL);
+        add_moves_while_empty(board, piece, dirs[i], &moves);
+        assert_that(count(moves), is_equal_to(1));
+        destroy(&moves);
     }
 
     /* negative expectations */
-    never_expect(push);
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
 
         add_moves_while_empty(board, piece, dirs[i], NULL);
+        assert_that(count(moves), is_equal_to(0));
+        destroy(&moves);
     }
 }
 
 Ensure(Utils, add_moves_respect_enemy_checks)
 {
     direction_t dirs[] = { NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST, NORTH, SOUTH, EAST, WEST };
+    llist_t *moves = NULL;
 
     /* affirmative expectations */
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
         expect(is_enemy, will_return(true));
-        expect(push);
 
-        add_moves_while_empty(board, piece, dirs[i], NULL);
+        add_moves_while_empty(board, piece, dirs[i], &moves);
+        assert_that(count(moves), is_equal_to(1));
+        destroy(&moves);
     }
 
     /* negative expectations */
-    never_expect(push);
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
         expect(is_square_empty, will_return(false));
         expect(is_enemy, will_return(false));
 
-        add_moves_while_empty(board, piece, dirs[i], NULL);
+        add_moves_while_empty(board, piece, dirs[i], &moves);
+
+        assert_that(count(moves), is_equal_to(0));
+        destroy(&moves);
     }
 }
 
@@ -105,7 +112,9 @@ Ensure(Utils, add_moves_pushes_correct_positions)
         {UP, NONE}, {DOWN, NONE},
         {NONE, RIGHT}, {NONE, LEFT}
     };
+
     piece->rank = RANK_4; piece->file = FILE_D;
+    llist_t *moves = NULL;
 
     for(size_t i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
         expect(is_in_bounds, will_return(true));
@@ -116,15 +125,14 @@ Ensure(Utils, add_moves_pushes_correct_positions)
             piece->rank + 1 * curr_offset.rank,
             piece->file + 1 * curr_offset.file
         };
-        expect(push, when(new_data, is_equal_to_contents_of(&exp_position, sizeof(pos_t))));
 
-        add_moves_while_empty(board, piece, dirs[i], NULL);
+        add_moves_while_empty(board, piece, dirs[i], &moves);
+        assert_that(count(moves), is_equal_to(1));
+        assert_that((pos_t *) popleft(&moves),
+                is_equal_to_contents_of(&exp_position, sizeof(pos_t)));
+
+        destroy(&moves);
     }
-}
-
-void push(llist_t **head_ref, void *new_data, size_t data_size)
-{
-    mock(head_ref, new_data, data_size);
 }
 
 bool is_in_bounds(pos_t pos)

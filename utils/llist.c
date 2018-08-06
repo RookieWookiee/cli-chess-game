@@ -56,7 +56,7 @@ bool is_empty(llist_t *head_ref)
 
 int count(llist_t *head_ref)
 {
-    return head_ref->node_count;
+    return head_ref == NULL ? 0 : head_ref->node_count;
 }
 
 void *popleft(llist_t **head_ref)

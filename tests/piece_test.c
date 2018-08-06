@@ -14,9 +14,6 @@ AfterEach(Piece) {}
 static int fake_validate(piece_t *self, pos_t target, board_t *board) { return 0; }
 static llist_t *fake_gen_moves(piece_t *self, board_t *board) { return NULL; }
 void add_moves_while_empty(board_t * b, piece_t * p, direction_t d, llist_t **l) {}
-void destroy(llist_t **h) {}
-void push(llist_t **h, void *n, size_t d) {}
-void *popleft(llist_t **h) { return NULL; }
 piece_t **get_square(board_t *s, uint8_t r, uint8_t f) { return NULL; }
 bool is_square_empty(board_t *s, uint8_t r, uint8_t f) { return false; }
 

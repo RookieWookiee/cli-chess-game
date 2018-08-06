@@ -4,6 +4,7 @@
 #include "include/board.h"
 #include "include/piece.h"
 #include "include/position.h"
+#include "include/movement_utils.h"
 
 void set_square(board_t *self, pos_t pos, piece_t **piece);
 static void print_header();
@@ -113,4 +114,13 @@ static void print_footer()
     printf("|                      |\n"
            "|   a b c d e f g h    |\n"
            "|______________________|\n");
+}
+
+llist_t *get_piece_attackers(board_t *board, pos_t from_pos, bool piece_color)
+{
+    llist_t *attackers = NULL;
+
+    get_attackers_on_straights(board, from_pos, piece_color, &attackers);
+
+    return attackers;
 }

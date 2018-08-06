@@ -18,38 +18,10 @@ const struct piece_vtable_ BISHOP[] = { { fake_validate, fake_gen_moves } };
 const struct piece_vtable_ KING[] = { { fake_validate, fake_gen_moves } };
 
 bool position_equals(const void *p1, const void *p2) { return false; }
-bool contains(llist_t *node, void *obj, bool (*equals_fptr)(const void*, const void*)) { return false; }
-void destroy(llist_t **head_ref) {}
 int standard_validation(piece_t *self, pos_t target, board_t *board) { return 1; }
 
 /* calloc because the return value is being dereferenced in the SUT */
 piece_t **get_square(board_t *self, uint8_t rank, uint8_t file) { return calloc(1, sizeof(piece_t*)); }
-
-bool get_color(piece_t *piece)
-{
-    return (bool) mock(piece);
-}
-
-bool try_push_two_squares_ahead(piece_t *self, board_t *board, llist_t *moves) 
-{
-    return (bool) mock(self, board, moves);
-}
-
-bool try_push_one_square_ahead(piece_t *self, board_t *board, llist_t *moves)
-{
-    return (bool) mock(self, board, moves);
-}
-
-bool try_push_lsquare(piece_t *self, board_t *board, llist_t *moves)
-{
-    return (bool) mock(self, board, moves);
-}
-
-
-bool try_push_rsquare(piece_t *self, board_t *board, llist_t *moves)
-{
-    return (bool) mock(self, board, moves);
-}
 
 piece_t *pawn;
 board_t *board;
@@ -93,4 +65,30 @@ Ensure(Pawn, move_gen_tries_to_push_right_square)
 {
     expect(try_push_rsquare);
     generate_moves(pawn, board);
+}
+
+bool get_color(piece_t *piece)
+{
+    return (bool) mock(piece);
+}
+
+bool try_push_two_squares_ahead(piece_t *self, board_t *board, llist_t *moves) 
+{
+    return (bool) mock(self, board, moves);
+}
+
+bool try_push_one_square_ahead(piece_t *self, board_t *board, llist_t *moves)
+{
+    return (bool) mock(self, board, moves);
+}
+
+bool try_push_lsquare(piece_t *self, board_t *board, llist_t *moves)
+{
+    return (bool) mock(self, board, moves);
+}
+
+
+bool try_push_rsquare(piece_t *self, board_t *board, llist_t *moves)
+{
+    return (bool) mock(self, board, moves);
 }

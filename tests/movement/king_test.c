@@ -12,7 +12,6 @@
 /* fakes */
 void standard_validation(piece_t *self, pos_t target, board_t *board) { }
 piece_t **get_square(board_t *self, uint8_t rank, uint8_t file) { return calloc(1, sizeof(piece_t*)); }
-void push(llist_t **head_ref, void *new_data, size_t data_size);
 
 /* mocks */
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file);
@@ -37,10 +36,10 @@ Ensure(King, bound_checks_are_respected_in_move_generation)
     always_expect(is_in_bounds, will_return(false));
     always_expect(is_square_empty, will_return(true));
     always_expect(is_enemy, will_return(true));
-    
-    never_expect(push);
 
-    generate_moves(king, board);
+    llist_t *moves = generate_moves(king, board);
+
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(King, failed_empty_square_checks_are_respected_no_push_in_move_generation)
@@ -48,11 +47,12 @@ Ensure(King, failed_empty_square_checks_are_respected_no_push_in_move_generation
     expect(is_in_bounds, will_return(true));
     expect(is_square_empty, will_return(false));
     expect(is_enemy, will_return(false));
-    never_expect(push);
 
     always_expect(is_in_bounds, will_return(false));
 
-    generate_moves(king, board);
+    llist_t *moves = generate_moves(king, board);
+
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(King, push_occurs_on_empty_squares)
@@ -64,9 +64,9 @@ Ensure(King, push_occurs_on_empty_squares)
     never_expect(is_square_empty);
     never_expect(is_enemy);
 
-    expect(push);
+    llist_t *list = generate_moves(king, board);
 
-    generate_moves(king, board);
+    assert_that(count(list), is_equal_to(1));
 }
 
 Ensure(King, failed_enemy_checks_are_respected_no_push)
@@ -76,9 +76,11 @@ Ensure(King, failed_enemy_checks_are_respected_no_push)
     expect(is_enemy, will_return(false));
 
     always_expect(is_in_bounds, will_return(false));
-    never_expect(push);
 
-    generate_moves(king, board);
+    llist_t *moves = generate_moves(king, board);
+
+    assert_that(count(moves), is_equal_to(0));
+
 }
 
 Ensure(King, push_occurs_when_enemy_is_occupying_target_square)
@@ -87,10 +89,10 @@ Ensure(King, push_occurs_when_enemy_is_occupying_target_square)
     expect(is_square_empty, will_return(false));
     expect(is_enemy, will_return(true));
     always_expect(is_in_bounds, will_return(false));
-    
-    expect(push);
 
-    generate_moves(king, board);
+    llist_t *moves = generate_moves(king, board);
+
+    assert_that(count(moves), is_equal_to(1));
 }
 
 Ensure(King, eight_positions_are_tries_in_move_generation)
@@ -103,11 +105,6 @@ Ensure(King, eight_positions_are_tries_in_move_generation)
 bool is_enemy(piece_t *p1, piece_t *p2)
 {
     return (bool) mock(p1, p1);
-}
-
-void push(llist_t **head_ref, void *new_data, size_t data_size)
-{
-    mock(head_ref, new_data, data_size);
 }
 
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file)

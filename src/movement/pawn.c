@@ -34,13 +34,13 @@ static llist_t *gen_moves(piece_t *self, board_t *board)
     bool color = get_color(self);
     int start_rank = color == WHITE ? RANK_7 : RANK_2;
 
-    bool one_ahead_is_empty = try_push_one_square_ahead(self, board, moves);
+    bool one_ahead_is_empty = try_push_one_square_ahead(self, board, &moves);
 
     if(self->rank == start_rank && one_ahead_is_empty)
-        try_push_two_squares_ahead(self, board, moves); 
+        try_push_two_squares_ahead(self, board, &moves); 
 
-    try_push_lsquare(self, board, moves);
-    try_push_rsquare(self, board, moves);
+    try_push_lsquare(self, board, &moves);
+    try_push_rsquare(self, board, &moves);
 
     return moves;
 }

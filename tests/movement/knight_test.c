@@ -16,7 +16,6 @@ piece_t **get_square(board_t *self, uint8_t rank, uint8_t file) { return calloc(
 bool is_in_bounds(pos_t pos);
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file);
 bool is_enemy(piece_t *p1, piece_t *p2);
-void push(llist_t **head_ref, void *new_data, size_t data_size);
 
 piece_t *knight;
 board_t *board;
@@ -46,18 +45,18 @@ Ensure(Knight, generated_moves_tries_eight_positions)
 Ensure(Knight, bound_checking_is_respected_in_move_generation)
 {
     always_expect(is_in_bounds, will_return(false));
-    never_expect(push);
 
-    generate_moves(knight, board);
+    llist_t *moves = generate_moves(knight, board);
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(Knight, empty_square_checking_is_respected_in_move_generation)
 {
     always_expect(is_in_bounds, will_return(true));
     always_expect(is_square_empty, will_return(false));
-    never_expect(push);
 
-    generate_moves(knight, board);
+    llist_t *moves = generate_moves(knight, board);
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(Knight, enemy_checking_is_respected_in_move_generation)
@@ -65,9 +64,9 @@ Ensure(Knight, enemy_checking_is_respected_in_move_generation)
     always_expect(is_in_bounds, will_return(true));
     always_expect(is_square_empty, will_return(false));
     always_expect(is_enemy, will_return(false));
-    never_expect(push);
 
-    generate_moves(knight, board);
+    llist_t *moves = generate_moves(knight, board);
+    assert_that(count(moves), is_equal_to(0));
 }
 
 Ensure(Knight, push_occurs_if_all_checks_are_met)
@@ -80,9 +79,8 @@ Ensure(Knight, push_occurs_if_all_checks_are_met)
     always_expect(is_enemy, will_return(false));
     always_expect(is_square_empty, will_return(false));
 
-    expect(push);
-
-    generate_moves(knight, board);
+    llist_t *moves = generate_moves(knight, board);
+    assert_that(count(moves), is_equal_to(1));
 }
 
 bool is_in_bounds(pos_t pos)
@@ -98,9 +96,4 @@ bool is_square_empty(board_t *self, uint8_t rank, uint8_t file)
 bool is_enemy(piece_t *p1, piece_t *p2)
 {
     return (bool) mock(p1, p1);
-}
-
-void push(llist_t **head_ref, void *new_data, size_t data_size)
-{
-    mock(head_ref, new_data, data_size);
 }

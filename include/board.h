@@ -16,9 +16,18 @@ enum { DOWN = 1, UP = -1, LEFT = -1, RIGHT = 1, NONE = 0 };
 
 /* forward declaration */
 typedef struct piece piece_t;
+typedef struct node llist_t;
 
 typedef struct board {
     piece_t **squares[8][8];
+
+    pos_t *pawns[2][8];
+    pos_t *rooks[2][10];
+    pos_t *bishops[2][10];
+    pos_t *knights[2][10];
+    pos_t *queens[2][10];
+    pos_t *kings[2];
+
     int ply;
 } board_t;
 
@@ -31,5 +40,6 @@ void update_board(board_t *self, piece_t **piece, pos_t target_pos);
 bool is_square_empty(board_t *self, uint8_t rank, uint8_t file);
 bool is_in_bounds(pos_t pos);
 board_t *make_empty_board();
+llist_t *get_piece_attackers(board_t *board, pos_t from_pos, bool piece_color);
 
 #endif /* BOARD_H */
